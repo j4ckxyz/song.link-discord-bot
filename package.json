@@ -1,0 +1,23 @@
+{
+  "name": "song-link-discord-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot that automatically converts Apple Music and Spotify links to song.link",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "music",
+    "song.link"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1"
+  }
+}
