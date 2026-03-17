@@ -66,21 +66,38 @@ function cleanSocialUrl(url) {
 
 // ── Cobalt API ───────────────────────────────────────────────────────────────
 
-const COBALT_API = process.env.COBALT_API_URL || 'https://cobalt-backend.canine.tools';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
+// If COBALT_API_URL is set, use only that. Otherwise try these in order.
+const COBALT_INSTANCES = process.env.COBALT_API_URL
+  ? [process.env.COBALT_API_URL]
+  : [
+      'https://cobalt-backend.canine.tools',
+      'https://cobalt-api.meowing.de',
+      'https://capi.3kh0.net',
+    ];
+
 async function callCobaltApi(url) {
-  const res = await fetch(`${COBALT_API}/`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ url, videoQuality: '1080' }),
-    signal: AbortSignal.timeout(30_000),
-  });
-  if (!res.ok) throw new Error(`Cobalt HTTP ${res.status}`);
-  return res.json();
+  let lastError;
+  for (const instance of COBALT_INSTANCES) {
+    try {
+      const res = await fetch(`${instance}/`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url, videoQuality: '1080' }),
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (!res.ok) throw new Error(`Cobalt HTTP ${res.status}`);
+      return await res.json();
+    } catch (err) {
+      console.warn(`Cobalt instance ${instance} failed: ${err.message}`);
+      lastError = err;
+    }
+  }
+  throw lastError;
 }
 
 // ── File download & compression ──────────────────────────────────────────────
