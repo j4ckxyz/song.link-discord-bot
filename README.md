@@ -78,18 +78,73 @@ You should see:
 
 That's it! 🎉
 
+## 📱 Social Media Video Downloads
+
+The bot also automatically downloads and re-uploads videos from social media when posted in a configured channel. Videos over 10 MB are automatically compressed to fit Discord's limit.
+
+**Supported platforms:**
+- Instagram Reels & posts
+- TikTok (including short links)
+- Twitter / X
+- YouTube Shorts & regular videos
+- Reddit (v.redd.it)
+- Twitch clips
+- Streamable
+
+Carousel/multi-video posts will have all clips attached in a single reply. Tracking query parameters (e.g. `?igsh=...` on Instagram) are stripped automatically before downloading.
+
+Downloads are powered by [cobalt](https://cobalt.tools). The bot uses a public community instance by default — see `.env.example` to override with your own self-hosted instance.
+
+**Additional requirement:** `ffmpeg` must be installed on the host machine for video compression.
+
+```bash
+# macOS
+brew install ffmpeg
+
+# Ubuntu / Debian
+sudo apt install ffmpeg
+```
+
+---
+
+## ⬆️ Migrating an existing `.env`
+
+If you already have the bot running, add these new variables to your `.env` file:
+
+```env
+# Channel where the bot downloads social media videos (required for that feature)
+SOCIAL_CHANNEL_ID=paste_your_channel_id_here
+
+# Optional: use your own cobalt instance instead of the default public one
+# COBALT_API_URL=https://cobalt-backend.canine.tools
+```
+
+Then install the new dependency:
+
+```bash
+npm install
+```
+
+`CHANNEL_ID` (music links) is unchanged — both channels work independently and can even be the same channel.
+
+---
+
 ## 📋 Requirements
 
 - **Node.js** 18 or higher ([Download here](https://nodejs.org/))
+- **ffmpeg** installed on the host (required for video compression)
 - A **Discord account** with permission to add bots to a server
 
 ## 🎯 Supported Platforms
 
+**Music link conversion:**
 - ✅ **Spotify** (open.spotify.com)
 - ✅ **Apple Music** (music.apple.com)
 
-The bot converts these to song.link URLs which support:
-- Spotify, Apple Music, YouTube, YouTube Music, Deezer, Tidal, Amazon Music, Pandora, Napster, and more!
+Converts to song.link URLs which support Spotify, Apple Music, YouTube, YouTube Music, Deezer, Tidal, Amazon Music, Pandora, Napster, and more.
+
+**Social media video downloads:**
+- ✅ Instagram, TikTok, Twitter/X, YouTube, Reddit, Twitch, Streamable, and more
 
 ## 🛠️ Advanced
 
